@@ -1,0 +1,43 @@
+#!/bin/gawk -f
+
+BEGIN {
+        limit=max
+
+        NUMBER_OF_LINES=55
+        LINE_WIDTH=100
+}
+{
+        if (match($1,/^[0-9]+$/)){
+                if(!limit>0 || $1<limit) {
+                        values[i++]=$1
+                }
+        }
+}
+END {
+        number_of_records = 0
+        for(v_index in values) {
+                if(max<values[v_index]) max = values[v_index]
+                number_of_records++
+        }
+        line_height=max/NUMBER_OF_LINES
+        for(v_index in values) {
+                counted[int(values[v_index]/line_height)] += 1
+        }
+        line=0
+        max_width=0
+        while(line <= NUMBER_OF_LINES) {
+                if(max_width<counted[line]) max_width = counted[line]
+                line++
+        }
+        line=0
+        records_so_far = 0
+        printf("%8s %8s %8s %s\n","Value","Height","%ile","Histogram")
+        while(line <= NUMBER_OF_LINES) {
+                records_so_far += counted[line]
+                bar_width=counted[line]*LINE_WIDTH/max_width
+                bar=""
+                while (bar_width-->0) bar=bar "#"
+                printf("%8d %8d %8.4f %s\n",line * line_height,counted[line],100*records_so_far/number_of_records, bar)
+                line ++
+        }
+}
