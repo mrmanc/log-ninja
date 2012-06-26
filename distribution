@@ -20,7 +20,7 @@ BEGIN {
         }
 }
 {
-        if (match($1,/^[0-9]+$/)){
+        if (match($1,/^[0-9\.]+$/)){
                 if(!LIMIT>0 || $1<LIMIT) {
                         values[i++]=$1
                 }
