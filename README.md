@@ -4,6 +4,7 @@ log-ninja
 A set of scripts I find useful when analysing log files
 
 distribution
+------------
 
 See <a href="http://bit.ly/pivot-stdout"> for more information about this script.
 
