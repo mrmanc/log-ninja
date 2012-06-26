@@ -12,7 +12,12 @@ BEGIN {
         else {
                 NUMBER_OF_LINES=55
         }
-        LINE_WIDTH=100
+        if (max_width) {
+                LINE_WIDTH=max_width
+        }
+        else {
+                LINE_WIDTH=100
+        }
 }
 {
         if (match($1,/^[0-9]+$/)){
