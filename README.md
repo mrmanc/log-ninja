@@ -11,7 +11,10 @@ Briefly, use it like this:
 
 Show distribution of earthquake magnitudes over the last 7 days:
 <pre>
-mark$ curl http://earthquake.usgs.gov/earthquakes/catalogs/eqs7day-M0.txt  --silent | sed '1d' | cut -d, -f9 | distribution -v max_width=80
+mark$ curl http://earthquake.usgs.gov/earthquakes/catalogs/eqs7day-M0.txt --silent \
+| \sed '1d' \
+| cut -d, -f9 \
+| distribution -v max_width=80
    Value   Height     %ile Histogram
        0      274  23.7435 #########################################
        1      545  70.9705 ################################################################################
