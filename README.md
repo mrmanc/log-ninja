@@ -10,6 +10,7 @@ See <a href="http://bit.ly/pivot-stdout"> for more information about this script
 Briefly, use it like this:
 
 Show distribution of earthquake magnitudes over the last 7 days:
+<pre>
 mark$ curl http://earthquake.usgs.gov/earthquakes/catalogs/eqs7day-M0.txt  --silent | sed '1d' | cut -d, -f9 | distribution
    Value   Height     %ile Histogram
        0      274  23.7435 ###################################################
@@ -19,9 +20,11 @@ mark$ curl http://earthquake.usgs.gov/earthquakes/catalogs/eqs7day-M0.txt  --sil
        4       59  96.9671 ###########
        5       31  99.6534 ######
        6        4 100.0000 #
+</pre>
 
 Or show the distribution of word length in your UNIX dictionary:
 
+<pre>
 mark$ cat /usr/share/dict/words | awk '{print length($1)}' | distribution
    Value   Height     %ile Histogram
        0        0   0.0000
@@ -70,3 +73,6 @@ mark$ cat /usr/share/dict/words | awk '{print length($1)}' | distribution
       43        0  99.9998
       44        0  99.9998
       45        1 100.0000 #
+</pre>
+
+It's <a href="http://en.wikipedia.org/wiki/Pneumonoultramicroscopicsilicovolcanoconiosis">pneumonoultramicroscopicsilicovolcanoconiosis</a> by the way, in case you were wondering. I thought you were.
