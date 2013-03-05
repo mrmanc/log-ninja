@@ -1,21 +1,22 @@
 #!/usr/bin/awk -f
 
+# comes from https://github.com/mrmanc/log-ninja
+
 # supply max_lines and max as variables like this:
-# cat /usr/share/dict/words | awk '{print length($1)}' | distribution -v max_lines=5 -v max=10
+# cat /usr/share/dict/words | awk '{print length($1)}' | \
+#     distribution -v max_lines=5 -v max=10
 
 BEGIN {
         LIMIT=max
         DEFAULT_MAX_LINES=55
         if (lines) {
                 NUMBER_OF_LINES=lines
-        }
-        else {
+        } else {
                 NUMBER_OF_LINES=55
         }
         if (max_width) {
                 LINE_WIDTH=max_width
-        }
-        else {
+        } else {
                 LINE_WIDTH=100
         }
 }
@@ -27,46 +28,53 @@ BEGIN {
         }
 }
 END {
-        number_of_records = 0
-        for(v_index in values) {
-                if(max<values[v_index]) max = values[v_index]
+        number_of_records=0
+        min=values[0]
+        for (v_index in values) {
+                if (max < values[v_index])
+                        max = values[v_index]
+                if (min > values[v_index])
+                        min = values[v_index]
                 number_of_records++
         }
+        if (min_use <= 0)
+		min=0
         if (max_lines) {
                 if (max <= max_lines) {
                         number_of_lines = max
-                }
-                else {
+                } else {
                         number_of_lines = max_lines
                 }
-        }
-        else {
+        } else {
                 if (max <= DEFAULT_MAX_LINES) {
                         number_of_lines = max
-                }
-                else {
+                } else {
                         number_of_lines = DEFAULT_MAX_LINES
                 }
         }
-        line_height=max/number_of_lines
-        for(v_index in values) {
-                counted[int(values[v_index]/line_height)] += 1
+        line_height=(max-min)/number_of_lines
+        printf("min %d max %d height %d\n", min, max, line_height)
+        for (v_index in values) {
+                counted[int((values[v_index]-min)/line_height)]++
         }
         line=0
         max_width=0
         while(line <= number_of_lines) {
-                if(max_width<counted[line]) max_width = counted[line]
+                if (max_width < counted[line])
+			max_width = counted[line]
                 line++
         }
         line=0
-        records_so_far = 0
+        records_so_far=0
         printf("%8s %8s %8s %s\n","Value","Height","%ile","Histogram")
-        while(line <= number_of_lines) {
+        while (line <= number_of_lines) {
                 records_so_far += counted[line]
                 bar_width=counted[line]*LINE_WIDTH/max_width
                 bar=""
-                while (bar_width-->0) bar=bar "#"
-                printf("%8d %8d %8.4f %s\n",line * line_height,counted[line],100*records_so_far/number_of_records, bar)
-                line ++
+                while (bar_width-- > 0)
+			bar=bar "#"
+                printf("%8d %8d %8.4f %s\n", min + line * line_height,
+		    counted[line], 100*records_so_far/number_of_records, bar)
+                line++
         }
 }
