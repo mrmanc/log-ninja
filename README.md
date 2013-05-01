@@ -80,3 +80,11 @@ mark$ cat /usr/share/dict/words | awk '{print length($1)}' | distribution -v max
 </pre>
 
 It's <a href="http://en.wikipedia.org/wiki/Pneumonoultramicroscopicsilicovolcanoconiosis">pneumonoultramicroscopicsilicovolcanoconiosis</a> by the way, in case you were wondering. I thought you were.
+
+You could cut out the outlier by selecting a window of values (i.e. min and max) like this:
+
+<pre>
+mark$ cat /usr/share/dict/words | awk '{print length($1)}' | distribution -v max_width=80 -v max=31 -v min=3
+</pre>
+
+But please note that the percentiles will not be correct if you specify a min or a max value - this is a known bug and might get fixed if I rewrite it to make it more readable.
