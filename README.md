@@ -40,7 +40,7 @@ Found 1154 records distributed in 58 distinct values between 0 and 6.1
       6.10        2 100.00 ▒
 </pre>
 
-Or show the distribution of word length in your UNIX dictionary:
+Or show the distribution of word length in your UNIX dictionary: (you can use <a href="http://www.cs.duke.edu/~ola/ap/linuxwords">this shorter words list</a> if you don't have words)
 
 <pre>
 mark$ cat /usr/share/dict/words | awk '{print length($1)}' | ./distribution width=70
