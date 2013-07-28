@@ -1,7 +1,17 @@
 log-ninja
 =========
 
-A set of scripts I find useful when analysing log files
+A set of scripts I find useful when analysing log files. You might like to put them in your ~/bin folder.
+
+col
+---
+
+Takes lines on STDIN and returns the specified column (delimited by whitespace).
+
+<pre>
+mark$ echo "The quick brown fox jumps over the lazy dog" | ./col 4
+fox
+</pre>
 
 distribution
 ------------
@@ -15,68 +25,76 @@ Show distribution of earthquake magnitudes over the last 7 days:
 mark$ curl http://earthquake.usgs.gov/earthquakes/catalogs/eqs7day-M0.txt --silent \
 | \sed '1d' \
 | cut -d, -f9 \
-| distribution -v max_width=80
-   Value   Height     %ile Histogram
-       0      274  23.7435 #########################################
-       1      545  70.9705 ################################################################################
-       2      196  87.9549 #############################
-       3       45  91.8544 #######
-       4       59  96.9671 #########
-       5       31  99.6534 #####
-       6        4 100.0000 #
+| ./distribution width=80
+
+Found 1147 records distributed in 58 distinct values between 0 and 6.1
+
+     Value    Quant   %ile Histogram
+     -----    -----   ---- ---------
+      0.00      330  28.77 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+      1.02      524  74.46 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+      2.03      164  88.75 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+      3.05       36  91.89 ▒▒▒▒▒▒
+      4.07       68  97.82 ▒▒▒▒▒▒▒▒▒▒▒
+      5.08       23  99.83 ▒▒▒▒
+      6.10        2 100.00 ▒
+>=    6.10     1147 100.00 (hidden)
 </pre>
 
 Or show the distribution of word length in your UNIX dictionary:
 
 <pre>
-mark$ cat /usr/share/dict/words | awk '{print length($1)}' | distribution -v max_width=80
-   Value   Height     %ile Histogram
-       0        0   0.0000
-       1       53   0.0110 #
-       2     1271   0.2759 ##
-       3     6221   1.5724 ########
-       4    13208   4.3251 #################
-       5    25102   9.5565 #################################
-       6    41698  18.2467 ######################################################
-       7    53944  29.4890 #####################################################################
-       8    62334  42.4799 ################################################################################
-       9    62615  55.5294 ################################################################################
-      10    54667  66.9224 ######################################################################
-      11    46512  76.6158 ############################################################
-      12    37584  84.4486 #################################################
-      13    27976  90.2790 ####################################
-      14    19326  94.3067 #########################
-      15    12160  96.8410 ################
-      16     7137  98.3284 ##########
-      17     4014  99.1649 ######
-      18     2011  99.5840 ###
-      19     1055  99.8039 ##
-      20      508  99.9098 #
-      21      240  99.9598 #
-      22      103  99.9812 #
-      23       50  99.9917 #
-      24       19  99.9956 #
-      25        9  99.9975 #
-      26        2  99.9979 #
-      27        3  99.9985 #
-      28        2  99.9990 #
-      29        2  99.9994 #
-      30        1  99.9996 #
-      31        1  99.9998 #
-      32        0  99.9998
-      33        0  99.9998
-      34        0  99.9998
-      35        0  99.9998
-      36        0  99.9998
-      37        0  99.9998
-      38        0  99.9998
-      39        0  99.9998
-      40        0  99.9998
-      41        0  99.9998
-      42        0  99.9998
-      43        0  99.9998
-      44        0  99.9998
-      45        1 100.0000 #
+mark$ cat /usr/share/dict/words | awk '{print length($1)}' | ./distribution width=80
+
+Found 489040 records distributed in 35 distinct values between 1 and 45
+
+     Value    Quant   %ile Histogram
+     -----    -----   ---- ---------
+      1.00       26   0.01 ▒
+      2.00      290   0.06 ▒
+      3.00     2017   0.48 ▒▒▒
+      4.00     7508   2.01 ▒▒▒▒▒▒▒▒▒
+      5.00    18148   5.72 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+      6.00    35087  12.90 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+      7.00    50877  23.30 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+      8.00    64210  36.43 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+      9.00    67754  50.29 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+     10.00    64374  63.45 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+     11.00    53736  74.44 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+     12.00    41934  83.01 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+     13.00    30291  89.21 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+     14.00    20873  93.47 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+     15.00    13512  96.24 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+     16.00     8427  97.96 ▒▒▒▒▒▒▒▒▒▒
+     17.00     4760  98.93 ▒▒▒▒▒▒
+     18.00     2624  99.47 ▒▒▒▒
+     19.00     1378  99.75 ▒▒
+     20.00      630  99.88 ▒
+     21.00      309  99.94 ▒
+     22.00      134  99.97 ▒
+     23.00       63  99.98 ▒
+     24.00       35  99.99 ▒
+     25.00       17  99.99 ▒
+     26.00        2 100.00 ▒
+     27.00        5 100.00 ▒
+     28.00        3 100.00 ▒
+     29.00        6 100.00 ▒
+     30.00        2 100.00 ▒
+     31.00        2 100.00 ▒
+     32.00        1 100.00 ▒
+     33.00        1 100.00 ▒
+     34.00        2 100.00 ▒
+     35.00        0 100.00
+     36.00        0 100.00
+     37.00        0 100.00
+     38.00        0 100.00
+     39.00        0 100.00
+     40.00        0 100.00
+     41.00        0 100.00
+     42.00        0 100.00
+     43.00        0 100.00
+     44.00        0 100.00
+     45.00        2 100.00 ▒
 </pre>
 
 It's <a href="http://en.wikipedia.org/wiki/Pneumonoultramicroscopicsilicovolcanoconiosis">pneumonoultramicroscopicsilicovolcanoconiosis</a> by the way, in case you were wondering. I thought you were.
@@ -84,7 +102,7 @@ It's <a href="http://en.wikipedia.org/wiki/Pneumonoultramicroscopicsilicovolcano
 You could cut out the outlier by selecting a window of values (i.e. min and max) like this:
 
 <pre>
-mark$ cat /usr/share/dict/words | awk '{print length($1)}' | distribution -v max_width=80 -v max=31 -v min=3
+mark$ cat /usr/share/dict/words | awk '{print length($1)}' | ./distribution width=80 max=31 min=3
 </pre>
 
-But please note that the percentiles will not be correct if you specify a min or a max value - this is a known bug and might get fixed if I rewrite it to make it more readable.
+There was a known bug with percentiles when a min or a max value was specified, but a rewrite has solved this.

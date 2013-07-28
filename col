@@ -1,0 +1,2 @@
+#!/usr/bin/sh
+gawk -v column=$1 '{print $(column)}'
