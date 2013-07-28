@@ -16,7 +16,7 @@ fox
 distribution
 ------------
 
-See <a href="http://bit.ly/pivot-stdout"> for more information about this script.
+See <a href="http://bit.ly/pivot-stdout">this blog post</a> for more information about this script.
 
 Briefly, use it like this:
 
@@ -105,3 +105,5 @@ mark$ cat /usr/share/dict/words | awk '{print length($1)}' | ./distribution widt
 </pre>
 
 There was a known bug with percentiles when a min or a max value was specified, but a rewrite has solved this.
+
+You might also be interested in <a href="https://github.com/holman/spark">Spark</a> - Holman's script which generates sparklines (more traditional bar charts minus the labels etc) on your command line from on a list of numbers.
