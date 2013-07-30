@@ -1,0 +1,6 @@
+#!/bin/gawk -f
+
+{strings[$1]++}
+END {
+        for (string in strings) {print strings[string],string}
+}
