@@ -15,7 +15,8 @@
 # See https://github.com/mrmanc/log-ninja#distribution for more information and examples.
 
 BEGIN{
-	BAR_CHARACTER="\xDB"
+	# If you want a filled in solid histogram use "\xDB", but that might not work on your terminal.
+	BAR_CHARACTER="_"
 	LINES_DEFAULT=50
 	WIDTH_DEFAULT=100
 }
@@ -30,12 +31,12 @@ END {
 	else if (max_width != "") {lineWidth=max_width}
 	else {lineWidth=WIDTH_DEFAULT}
 	
-	asorti(valueTotals, values, "@ind_num_asc")
+	#distinctValues=asorti(valueTotals, values, "@ind_num_asc")
+	distinctValues=qsorti(valueTotals,values)
 	# adding zero to force vars to be numbers, as the asorti function above seems to damage
 	# the numerical indices when a sorted_in value is provided, causing the comparisons to fail
 	for (valIndex in values) values[valIndex]=values[valIndex] + 0
 	
-	distinctValues=length(valueTotals)
 	firstValue=values[1]
 	lastValue=values[distinctValues]
 	
@@ -102,4 +103,32 @@ function bar(characters) {
 	result=""
 	while (characters -- > 0) result=result BAR_CHARACTER
 	return result
+}
+
+function qsorti(A,B) {
+	j=0
+	for (i in A) B[++j]=i
+	qsort(B, 1, j)
+	return j
+}
+
+# Below code taken from http://awk.info/?quicksort to provide a numerical sort due to
+# the absence of a three parameter asorti function in older versions of Awk (e.g. v3.1.3).
+
+function qsort(A, left, right, i, last) {
+	if (left >= right)
+		return
+	swap(A, left, left + int((right - left + 1) * rand()))
+	last = left
+	for (i = left+1; i <= right; i++)
+		if (A[i] + 0 < A[left] + 0)
+			swap(A, ++last, i)
+	swap(A, left, last)
+	qsort(A, left, last - 1)
+	qsort(A, last + 1, right)
+}
+function swap(A, i, j,   t) {
+	t = A[i]
+	A[i] = A[j]
+	A[j] = t
 }
