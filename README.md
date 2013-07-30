@@ -164,6 +164,7 @@ mark$ echo -e "apple\norange\norange\nbanana\napple\napple\nquince\nbanana" | ./
 3 apple
 2 banana
 1 quince
+</pre>
 
 urlencode / urldecode
 ---------------------
