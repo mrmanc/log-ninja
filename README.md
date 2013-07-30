@@ -3,14 +3,35 @@ log-ninja
 
 A set of scripts I find useful when analysing log files. You might like to put them in your ~/bin folder.
 
-col
----
+field
+-----
 
-Takes lines on STDIN and returns the specified column (delimited by whitespace).
+Takes lines on STDIN and returns the specified field (delimited by whitespace).
 
 <pre>
-mark$ echo "The quick brown fox jumps over the lazy dog" | ./col 4
+mark$ echo "The quick brown fox jumps over the lazy dog" | ./field 4
 fox
+</pre>
+
+fields
+------
+
+Helps you work out what field you want to show. 
+
+<pre>
+mark$ echo "The quick brown fox jumps over the lazy dog" | ./fields
+1 : The | 2 : quick | 3 : brown | 4 : fox | 5 : jumps | 6 : over | 7 : the | 8 : lazy | 9 : dog |
+
+Showing final line again for readability
+1 : The
+2 : quick
+3 : brown
+4 : fox
+5 : jumps
+6 : over
+7 : the
+8 : lazy
+9 : dog
 </pre>
 
 distribution
