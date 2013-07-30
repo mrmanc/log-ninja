@@ -1,0 +1,12 @@
+#!/bin/awk -f
+{
+        for (fieldIndex = 1; fieldIndex <= NF; fieldIndex++) {
+                printf("%s : %s | ", fieldIndex, $fieldIndex)
+        }
+}
+END {
+        print "\n\nShowing final line again for readability"
+        for (fieldIndex = 1; fieldIndex <= NF; fieldIndex++) {
+                printf("%s : %s\n", fieldIndex, $fieldIndex)
+        }
+}
