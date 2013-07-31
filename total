@@ -1,0 +1,4 @@
+#!/bin/awk -f
+
+{total += $1}
+END {print total}
