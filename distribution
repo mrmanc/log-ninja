@@ -7,11 +7,15 @@
 # Supply max_lines and max as variables like this:
 # 
 #   cat /usr/share/dict/words | awk '{print length($1)}' | \
-#       distribution max_lines=5 -v max=10 -v min=3
+#       distribution max_lines=5 max=10 min=3
 # 
 # Should support negative numbers and floats.
 # Line labels in the result refer to the start of that bar.
 # For example, a line labelled 4.00 followed by 5.00 will show values where 4.00 <= value < 5.00.
+# If you want to output histograms in real time, specify interval=10 for a histogram every 10 records.
+# The last 1000 records will be buffered for realtime histograms. Override this by specifying buffer=10000 for example.
+# Be aware that a larger buffer will impact performance greatly, as it has to be copied and sorted for each histogram.
+# To monitor whether the script is keeping up with realtime STDIN, pass a date string as the second field to be output for each iteration.
 # See https://github.com/mrmanc/log-ninja#distribution for more information and examples.
 
 BEGIN{
@@ -19,19 +23,44 @@ BEGIN{
 	BAR_CHARACTER="_"
 	LINES_DEFAULT=50
 	WIDTH_DEFAULT=100
+	REALTIME_RECORDS_DEFAULT=1000
 }
 "$1" ~ /^[-0-9\.]+$/ 
 {
-	valueTotals[$1 + 0] += 1
+	finalValueTotals[$1 + 0] += 1
 	records ++
+	if (interval > 0) {
+		if (iterations > 0) {
+			# once we've been around once we need to start decrementing and sometimes dropping values from our aggregate array
+			realtimeValueTotals[entries[realtimeIndex + 0] + 0]-=1
+			if (realtimeValueTotals[entries[realtimeIndex + 0] + 0] == 0) delete realtimeValueTotals[entries[realtimeIndex + 0] + 0]
+		}
+		realtimeIndex ++
+		if (realtimeIndex == realtimeRingBufferSize()) {
+			realtimeIndex=1 # reset to wrap around
+			iterations++
+		}
+		entries[realtimeIndex]=$1
+		realtimeValueTotals[$1 + 0]+=1
+		if (records % interval == 0) {
+			print "Progress: record number " records " and time (if specified) is: " $2
+			printHistogram(realtimeValueTotals)	
+		}
+	}
 }
 END {
+	printHistogram(finalValueTotals)
+}
+function realtimeRingBufferSize() {
+	return buffer == "" ? REALTIME_RECORDS_DEFAULT : buffer
+}
+function printHistogram(valueTotals) {
 	if (lines != "") {numberOfLines=lines} else {numberOfLines=LINES_DEFAULT}
 	if (width != "") {lineWidth=width}
 	else if (max_width != "") {lineWidth=max_width}
 	else {lineWidth=WIDTH_DEFAULT}
 	
-	#distinctValues=asorti(valueTotals, values, "@ind_num_asc")
+	#distinctValues=asorti(valueTotals, values, "@ind_num_asc") # works in newer versions of Awk
 	distinctValues=qsorti(valueTotals,values)
 	# adding zero to force vars to be numbers, as the asorti function above seems to damage
 	# the numerical indices when a sorted_in value is provided, causing the comparisons to fail
@@ -47,9 +76,8 @@ END {
 	else maxValue=lastValue
 	
 	window=maxValue - minValue
-	if (numberOfLines -1 > window) {
+	if (numberOfLines -1 > window && lines == "") {
 		numberOfLines=int(window) + 1
-		if (lines != "") print "Using a sensible number of lines (" numberOfLines ") rather than the specified " lines
 	}
 	if (numberOfLines > 1) lineHeight=window / (numberOfLines - 1) # last line will start at maxValue, so save that line for that
 	else if (window > 0) lineHeight=window
@@ -80,21 +108,25 @@ END {
 	}
 	recordsPerCharacter=lineWidth / mostRecordsInLine
 	recordsBeforeHistogram=total[0] - quantity[0]
-	
-	recordsAfterHistogram=records - total[lineNumber-1]
-	
-	printf("\nFound %s records distributed in %s distinct values between %s and %s\n\n", records, distinctValues, firstValue, lastValue)
-	printf("%10s %8s %6s %s\n", "Value", "Quant", "%ile", "Histogram")
-	printf("%10s %8s %6s %s\n", "-----", "-----", "----", "---------")
+	while(currentValueIndex <= distinctValues) {
+		currentValue=values[currentValueIndex]
+		recordsAfterHistogram += valueTotals[values[currentValueIndex]]
+		currentValueIndex ++
+	}
+	totalRecordsInHistogram=total[lineNumber-1]
+	frame=sprintf("\nFound %s records distributed in %s distinct values between %s and %s\n\n", totalRecordsInHistogram, distinctValues, firstValue, lastValue)
+	frame=frame sprintf("%10s %8s %6s %s\n", "Value", "Quant", "%ile", "Histogram")
+	frame=frame sprintf("%10s %8s %6s %s\n", "-----", "-----", "----", "---------")
 	if (recordsBeforeHistogram > 0) {
-		printf("<%9.2f %8s %6.2f (hidden)\n", minValue, recordsBeforeHistogram, percentile(recordsBeforeHistogram, records))
+		frame=frame sprintf("<%9.2f %8s %6.2f (hidden)\n", minValue, recordsBeforeHistogram, percentile(recordsBeforeHistogram, totalRecordsInHistogram))
 	}
 	lineNumber=0
 	while(lineNumber < (numberOfLines)) {
-		printf("%10.2f %8d %6.2f %s\n", label[lineNumber], quantity[lineNumber], percentile(total[lineNumber], records), bar(quantity[lineNumber]*recordsPerCharacter))
+		frame=frame sprintf("%10.2f %8d %6.2f %s\n", label[lineNumber], quantity[lineNumber], percentile(total[lineNumber], totalRecordsInHistogram), bar(quantity[lineNumber]*recordsPerCharacter))
 		lineNumber ++
 	}
-	if (recordsAfterHistogram > 0) printf(">=%8.2f %8s %6.2f (hidden)\n", maxValue, recordsAfterHistogram, "100")
+	if (recordsAfterHistogram > 0) frame=frame sprintf(">=%8.2f %8s %6.2f (hidden)\n", maxValue, recordsAfterHistogram, "100")
+	print frame
 }
 function percentile(runningTotal, total) {
 	return 100 * runningTotal / total
