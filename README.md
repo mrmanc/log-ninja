@@ -30,6 +30,47 @@ Found 1154 records distributed in 58 distinct values between 0 and 6.1
       6.10        2 100.00 _
 </pre>
 
+Or how tall people are:
+
+<pre>
+mark$ curl --silent http://socr.ucla.edu/docs/resources/SOCR_Data/SOCR_Data_Dinov_020108_HeightsWeights.html | grep -A 2 "<tr" | grep "<td x:num" | sed -e "s/^.*>\([0-9.]*\)<.*$/\1/" | ./distribution lines=30
+
+Found 25000 records distributed in 20917 distinct values between 60.2784 and 75.1528
+
+     Value    Quant   %ile Histogram
+     -----    -----   ---- ---------
+     60.28        2   0.01 _
+     60.79        4   0.02 _
+     61.30        3   0.04 _
+     61.82       10   0.08 _
+     62.33       59   0.31 ___
+     62.84       91   0.68 ____
+     63.36      211   1.52 ________
+     63.87      359   2.96 ______________
+     64.38      597   5.34 _______________________
+     64.89      874   8.84 _________________________________
+     65.41     1211  13.68 ______________________________________________
+     65.92     1731  20.61 _________________________________________________________________
+     66.43     2129  29.12 ________________________________________________________________________________
+     66.95     2444  38.90 ____________________________________________________________________________________________
+     67.46     2637  49.45 ___________________________________________________________________________________________________
+     67.97     2667  60.12 ____________________________________________________________________________________________________
+     68.48     2508  70.15 _______________________________________________________________________________________________
+     69.00     2134  78.68 _________________________________________________________________________________
+     69.51     1745  85.66 __________________________________________________________________
+     70.02     1276  90.77 ________________________________________________
+     70.54      960  94.61 ____________________________________
+     71.05      621  97.09 ________________________
+     71.56      348  98.48 ______________
+     72.08      192  99.25 ________
+     72.59       94  99.63 ____
+     73.10       56  99.85 ___
+     73.61       19  99.93 _
+     74.13       14  99.98 _
+     74.64        3 100.00 _
+     75.15        1 100.00 _
+</pre>
+
 Or show the distribution of word length in your UNIX dictionary: (you can use <a href="http://www.cs.duke.edu/~ola/ap/linuxwords">this shorter words list</a> if you don't have words)
 
 <pre>
@@ -91,7 +132,7 @@ It's <a href="http://en.wikipedia.org/wiki/Pneumonoultramicroscopicsilicovolcano
 You could cut out the outlier by selecting a window of values (i.e. min and max) like this:
 
 <pre>
-mark$ cat /usr/share/dict/words | awk '{print length($1)}' | ./distribution width=80 max=31 min=3
+mark$ cat /usr/share/dict/words | awk '{print length($1)}' | ./distribution width=80 min=1 max=35
 </pre>
 
 There was a known bug with percentiles when a min or a max value was specified, but a rewrite has solved this.
