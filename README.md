@@ -11,7 +11,7 @@ See <a href="http://bit.ly/pivot-stdout">this blog post</a> for more information
 Briefly, use it like this:
 
 Show distribution of earthquake magnitudes over the last 7 days:
-<pre>
+```
 mark$ curl http://earthquake.usgs.gov/earthquakes/catalogs/eqs7day-M0.txt --silent \
 | \sed '1d' \
 | cut -d, -f9 \
@@ -52,13 +52,13 @@ Found 1154 records distributed in 58 distinct values between 0 and 6.1
       5.89        2  99.83 __
       6.10        2 100.00 __
 
-</pre>
+```
 
 Or how tall people are (in inches):
 
-<pre>
+```
 mark$ curl --silent http://socr.ucla.edu/docs/resources/SOCR_Data/SOCR_Data_Dinov_020108_HeightsWeights.html | \
-grep -A 2 "&lt;tr" | grep "&lt;td x:num" | sed -e "s/^.*>\([0-9.]*\)&lt;.*$/\1/" | ./distribution lines=30 width=70
+grep -A 2 "<tr" | grep "<td x:num" | sed -e "s/^.*>\([0-9.]*\)<.*$/\1/" | ./distribution lines=30 width=70
 
 Found 25000 records distributed in 20917 distinct values between 60.2784 and 75.1528
 
@@ -93,11 +93,12 @@ Found 25000 records distributed in 20917 distinct values between 60.2784 and 75.
      73.61       19  99.93 _
      74.13       14  99.98 _
      74.64        3 100.00 _
-     75.15        1 100.00 _</pre>
+     75.15        1 100.00 _
+```
 
 Or show the distribution of word length in your UNIX dictionary: (you can use <a href="http://www.cs.duke.edu/~ola/ap/linuxwords">this shorter words list</a> if you don't have words)
 
-<pre>
+```
 mark$ cat /usr/share/dict/words | awk '{print length($1)}' | ./distribution width=70
 
 Found 489040 records distributed in 35 distinct values between 1 and 45
@@ -149,15 +150,15 @@ Found 489040 records distributed in 35 distinct values between 1 and 45
      43.00        0 100.00
      44.00        0 100.00
      45.00        2 100.00 _
-</pre>
+```
 
 It's <a href="http://en.wikipedia.org/wiki/Pneumonoultramicroscopicsilicovolcanoconiosis">pneumonoultramicroscopicsilicovolcanoconiosis</a> by the way, in case you were wondering. I thought you were.
 
 You could cut out the outlier by selecting a window of values (i.e. min and max) like this:
 
-<pre>
+```
 mark$ cat /usr/share/dict/words | awk '{print length($1)}' | ./distribution width=80 min=1 max=35
-</pre>
+```
 
 There was a known bug with percentiles when a min or a max value was specified, but a rewrite has solved this.
 
@@ -168,17 +169,17 @@ field
 
 Takes lines on STDIN and returns the specified field (delimited by whitespace).
 
-<pre>
+```
 mark$ echo "The quick brown fox jumps over the lazy dog" | ./field 4
 fox
-</pre>
+```
 
 fields
 ------
 
 Helps you work out what field you want to show. 
 
-<pre>
+```
 mark$ echo "The quick brown fox jumps over the lazy dog" | ./fields
 1 : The | 2 : quick | 3 : brown | 4 : fox | 5 : jumps | 6 : over | 7 : the | 8 : lazy | 9 : dog |
 
@@ -192,62 +193,62 @@ Showing final line again for readability
 7 : the
 8 : lazy
 9 : dog
-</pre>
+```
 
 total
 -----
 
 Adds up a column of numbers from STDIN and outputs the total at the end.
 
-<pre>mark$ : echo -e "1\n4\n7\n24\n64" | ./total
+```mark$ : echo -e "1\n4\n7\n24\n64" | ./total
 100
-</pre>
+```
 
 float
 -----
 
 Converts a field into a float by extracting the first float it can find in the string, ignoring and removing anything else.
 
-<pre>
+```
 mark$ echo -e "167.2ms\n115.89ms\n143.85ms" | ./float
 167.2
 115.89
 143.85
-</pre>
+```
 
 int
 ---
 
 Converts a field into an integer by extracting the first integer it can find in the string, ignoring and removing anything else.
 
-<pre>
+```
 mark$ echo -e "167.2ms\n115.89ms\n143.85ms" | ./int
 167
 115
 143
-</pre>
+```
 
 uniqcount
 ---------
 
 Roughly equivalent to piping some lines of text through sort and uniq -c, except less characters.
 
-<pre>
+```
 mark$ echo -e "apple\norange\norange\nbanana\napple\napple\nquince\nbanana" | ./uniqcount
 2 orange
 3 apple
 2 banana
 1 quince
-</pre>
+```
 
 urlencode / urldecode
 ---------------------
 
 Wrapper scripts for perls urlencoding functionality. 
 
-<pre>
+```
 mark$ echo "first=this+is+a+field&second=was+it+clear+(already)?" | ./urlencode
 first%3Dthis%2Bis%2Ba%2Bfield%26second%3Dwas%2Bit%2Bclear%2B(already)%3F
 mark$ echo "first=this+is+a+field&second=was+it+clear+%28already%29%3F" | ./urldecode
 first=this+is+a+field&second=was+it+clear+(already)?
-</pre>
+```
