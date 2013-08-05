@@ -33,7 +33,7 @@ Found 1154 records distributed in 58 distinct values between 0 and 6.1
 Or how tall people are:
 
 <pre>
-mark$ curl --silent http://socr.ucla.edu/docs/resources/SOCR_Data/SOCR_Data_Dinov_020108_HeightsWeights.html | grep -A 2 "<tr" | grep "<td x:num" | sed -e "s/^.*>\([0-9.]*\)<.*$/\1/" | ./distribution lines=30
+mark$ curl --silent http://socr.ucla.edu/docs/resources/SOCR_Data/SOCR_Data_Dinov_020108_HeightsWeights.html | grep -A 2 "tr" | grep "td x:num" | sed -e "s/^.*>\([0-9.]*\)<.*$/\1/" | ./distribution lines=30
 
 Found 25000 records distributed in 20917 distinct values between 60.2784 and 75.1528
 
@@ -69,6 +69,7 @@ Found 25000 records distributed in 20917 distinct values between 60.2784 and 75.
      74.13       14  99.98 _
      74.64        3 100.00 _
      75.15        1 100.00 _
+
 </pre>
 
 Or show the distribution of word length in your UNIX dictionary: (you can use <a href="http://www.cs.duke.edu/~ola/ap/linuxwords">this shorter words list</a> if you don't have words)
