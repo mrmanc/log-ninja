@@ -25,26 +25,27 @@ BEGIN{
 	WIDTH_DEFAULT=100
 	REALTIME_RECORDS_DEFAULT=1000
 }
-"$1" ~ /^[-0-9\.]+$/ 
+"$1" ~ /^[-0-9\.]+$/
 {
 	finalValueTotals[$1 + 0] += 1
 	records ++
 	if (interval > 0) {
+		realtimeIndex ++
+		if (realtimeIndex == realtimeRingBufferSize()) {
+                        realtimeIndex=1 # reset to wrap around
+                        iterations++
+                }
 		if (iterations > 0) {
 			# once we've been around once we need to start decrementing and sometimes dropping values from our aggregate array
 			realtimeValueTotals[entries[realtimeIndex + 0] + 0]-=1
 			if (realtimeValueTotals[entries[realtimeIndex + 0] + 0] == 0) delete realtimeValueTotals[entries[realtimeIndex + 0] + 0]
 		}
-		realtimeIndex ++
-		if (realtimeIndex == realtimeRingBufferSize()) {
-			realtimeIndex=1 # reset to wrap around
-			iterations++
-		}
-		entries[realtimeIndex]=$1
+		entries[realtimeIndex + 0]=$1
 		realtimeValueTotals[$1 + 0]+=1
 		if (records % interval == 0) {
 			print "Progress: record number " records " and time (if specified) is: " $2
-			printHistogram(realtimeValueTotals)	
+			printHistogram(realtimeValueTotals)
+			system("trap 'exit 1' 2; sleep 0.05")
 		}
 	}
 }
@@ -108,6 +109,7 @@ function printHistogram(valueTotals) {
 	}
 	recordsPerCharacter=lineWidth / mostRecordsInLine
 	recordsBeforeHistogram=total[0] - quantity[0]
+	recordsAfterHistogram=0
 	while(currentValueIndex <= distinctValues) {
 		currentValue=values[currentValueIndex]
 		recordsAfterHistogram += valueTotals[values[currentValueIndex]]
@@ -120,12 +122,14 @@ function printHistogram(valueTotals) {
 	if (recordsBeforeHistogram > 0) {
 		frame=frame sprintf("<%9.2f %8s %6.2f (hidden)\n", minValue, recordsBeforeHistogram, percentile(recordsBeforeHistogram, totalRecordsInHistogram))
 	}
+	else frame=frame "\n"
 	lineNumber=0
 	while(lineNumber < (numberOfLines)) {
 		frame=frame sprintf("%10.2f %8d %6.2f %s\n", label[lineNumber], quantity[lineNumber], percentile(total[lineNumber], totalRecordsInHistogram), bar(quantity[lineNumber]*recordsPerCharacter))
 		lineNumber ++
 	}
 	if (recordsAfterHistogram > 0) frame=frame sprintf(">=%8.2f %8s %6.2f (hidden)\n", maxValue, recordsAfterHistogram, "100")
+        else frame=frame "\n"
 	print frame
 }
 function percentile(runningTotal, total) {
