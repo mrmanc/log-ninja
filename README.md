@@ -33,7 +33,7 @@ Found 1154 records distributed in 58 distinct values between 0 and 6.1
 Or how tall people are:
 
 <pre>
-mark$ curl --silent http://socr.ucla.edu/docs/resources/SOCR_Data/SOCR_Data_Dinov_020108_HeightsWeights.html | grep -A 2 "tr" | grep "td x:num" | sed -e "s/^.*>\([0-9.]*\)<.*$/\1/" | ./distribution lines=30
+mark$ curl --silent http://socr.ucla.edu/docs/resources/SOCR_Data/SOCR_Data_Dinov_020108_HeightsWeights.html | grep -A 2 "&gt;tr" | grep "&gt;td x:num" | sed -e "s/^.*>\([0-9.]*\)&gt;.*$/\1/" | ./distribution lines=30
 
 Found 25000 records distributed in 20917 distinct values between 60.2784 and 75.1528
 
