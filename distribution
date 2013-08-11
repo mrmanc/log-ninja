@@ -115,7 +115,7 @@ function printHistogram(valueTotals) {
 		recordsAfterHistogram += valueTotals[values[currentValueIndex]]
 		currentValueIndex ++
 	}
-	totalRecordsInHistogram=total[lineNumber-1]
+	totalRecordsInHistogram=total[lineNumber-1] + recordsAfterHistogram
 	frame=sprintf("\nFound %s records distributed in %s distinct values between %s and %s\n\n", totalRecordsInHistogram, distinctValues, firstValue, lastValue)
 	frame=frame sprintf("%10s %8s %6s %s\n", "Value", "Quant", "%ile", "Histogram")
 	frame=frame sprintf("%10s %8s %6s %s\n", "-----", "-----", "----", "---------")
