@@ -1,2 +1,2 @@
 #!/bin/sh
-gawk -v field=$1 '{print $(field)}'
+awk -v field=$1 '{print $(field)}'
