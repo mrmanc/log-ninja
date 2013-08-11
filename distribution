@@ -1,4 +1,4 @@
-#!/usr/bin/gawk -f
+#!/usr/bin/awk -f
 
 # Comes from https://github.com/mrmanc/log-ninja/blob/master/distribution
 # 
@@ -89,7 +89,7 @@ function printHistogram(valueTotals) {
 	runningTotal=0
 	mostRecordsInLine=0
 	
-	while(lineNumber <= numberOfLines) {
+	while(lineNumber < numberOfLines) {
 		lineMin=minValue + (lineNumber * lineHeight)
 		lineMax=lineMin + lineHeight
 		lineRecords=0
