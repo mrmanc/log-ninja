@@ -8,7 +8,7 @@ distribution
 
 If you have the Perl library Time/HiRes.pm installed then you should look at using [philovivero's Perl implementation](https://github.com/philovivero/distribution), which is prettier and supports string values too (found looking at an old [Stack Overflow post](http://stackoverflow.com/questions/6949332/in-terminal-ascii-histograms-tool/11234476#11234476) of mine).
 
-See <a href="http://bit.ly/pivot-stdout">this blog post</a> for more information about this script.
+See [this blog post](http://bit.ly/ascii-histogram) for more information about this script.
 
 Briefly, use it like this:
 
