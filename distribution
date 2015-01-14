@@ -7,7 +7,7 @@
 # Supply max_lines and max as variables like this:
 # 
 #   cat /usr/share/dict/words | awk '{print length($1)}' | \
-#       distribution max_lines=5 max=10 min=3
+#       distribution lines=5 max=10 min=3
 # 
 # Should support negative numbers and floats.
 # Line labels in the result refer to the start of that bar.
