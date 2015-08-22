@@ -226,7 +226,8 @@ total
 
 Adds up a column of numbers from STDIN and outputs the total at the end.
 
-```mark$ : echo -e "1\n4\n7\n24\n64" | ./total
+```
+mark$ : echo -e "1\n4\n7\n24\n64" | ./total
 100
 ```
 
