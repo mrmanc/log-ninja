@@ -11,18 +11,27 @@ batch will read a steam of input from STDIN and concatenate it (space separated)
 So this:
 
 ```
+$ for (( i = 0; i <= 10 ; i++ )); do echo $i; sleep 0.2; done
+0
 1
 2
 3
 4
 5
+6
+7
+8
+9
+10
 ```
 
 becomes this:
 
 ```
-1 2 3
-4 5
+$ for (( i = 0; i <= 10 ; i++ )); do echo $i; sleep 0.2; done | ./batch
+0 1 2
+4 5 6 7
+9 10
 ```
 
 [Watch an example](http://showterm.io/77d78dc1fe91a5d854ba8).

@@ -14,7 +14,10 @@ BEGIN {
     else {
         "date +%s" | getline batch_time;
         close("date +%s");
-        print batch;
+        print substr(batch, 2, length(batch)-1);
         batch = "";
     }
+}
+END {
+    print substr(batch, 2, length(batch)-1);
 }
