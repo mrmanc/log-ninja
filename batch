@@ -1,0 +1,20 @@
+#!/usr/bin/awk -f
+
+BEGIN {
+    "date +%s" | getline batch_time;
+    close("date +%s");
+    batch = "";
+}
+{
+    "date +%s" | getline current_time;
+    close("date +%s");
+    if (batch_time == current_time) {
+        batch = batch " " $1;
+    }
+    else {
+        "date +%s" | getline batch_time;
+        close("date +%s");
+        print batch;
+        batch = "";
+    }
+}

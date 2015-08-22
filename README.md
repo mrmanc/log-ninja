@@ -3,6 +3,30 @@ log-ninja
 
 A set of scripts I find useful when analysing log files. You might like to put them in your ~/bin folder.
 
+batch
+------------
+
+batch will read a steam of input from STDIN and concatenate it (space separated) into a string, flushing it to STDOUT once per second. That means it can batch numerical output from a command in to a line per second with multiple values on it.
+
+So this:
+
+```
+1
+2
+3
+4
+5
+```
+
+becomes this:
+
+```
+1 2 3
+4 5
+```
+
+[Watch an example](http://showterm.io/77d78dc1fe91a5d854ba8).
+
 distribution
 ------------
 
