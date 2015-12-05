@@ -10,6 +10,7 @@
 #       distribution lines=5 max=10 min=3
 # 
 # Should support negative numbers and floats.
+# Can specify a bin width of N with option bin=N.  Overrides the lines option.
 # Line labels in the result refer to the start of that bar.
 # For example, a line labelled 4.00 followed by 5.00 will show values where 4.00 <= value < 5.00.
 # If you want to output histograms in real time, specify interval=10 for a histogram every 10 records.
@@ -75,6 +76,8 @@ function printHistogram(valueTotals) {
 	
 	if (max != "") maxValue=max
 	else maxValue=lastValue
+
+	if (bin !="") {numberOfLines= ((maxValue-minValue) / bin + 1)}
 	
 	window=maxValue - minValue
 	if (numberOfLines -1 > window && lines == "") {
