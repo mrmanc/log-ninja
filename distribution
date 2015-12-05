@@ -26,11 +26,13 @@ BEGIN{
 	LINES_DEFAULT=50
 	WIDTH_DEFAULT=100
 	REALTIME_RECORDS_DEFAULT=1000
+	DONT_ACCUMULATE_DEFAULT=""
 	VERBOSE_DEFAULT=""
 	HIDDEN_DEFAULT=""
 }
 "$1" ~ /^[-0-9\.]+$/
 {
+	if (accumulate == "false" ) { dontAccumulateHistogram="true" } else if ( accumulate != "" ) {dontAccumulateHistogram=""} else {dontAccumulateHistogram=DONT_ACCUMULATE_DEFAULT}
 	finalValueTotals[$1 + 0] += 1
 	records ++
 	if (interval > 0) {
@@ -41,7 +43,7 @@ BEGIN{
                 }
 		if (iterations > 0) {
 			# once we've been around once we need to start decrementing and sometimes dropping values from our aggregate array
-			realtimeValueTotals[entries[realtimeIndex + 0] + 0]-=1
+			if ( dontAccumulateHistogram ) realtimeValueTotals[entries[realtimeIndex + 0] + 0]-=1
 			if (realtimeValueTotals[entries[realtimeIndex + 0] + 0] == 0) delete realtimeValueTotals[entries[realtimeIndex + 0] + 0]
 		}
 		entries[realtimeIndex + 0]=$1
