@@ -27,6 +27,7 @@ BEGIN{
 	WIDTH_DEFAULT=100
 	REALTIME_RECORDS_DEFAULT=1000
 	VERBOSE_DEFAULT=""
+	HIDDEN_DEFAULT=""
 }
 "$1" ~ /^[-0-9\.]+$/
 {
@@ -60,6 +61,7 @@ function realtimeRingBufferSize() {
 }
 function printHistogram(valueTotals) {
 	if (stats != "") {verbose="true"} else {verbose=VERBOSE_DEFAULT}
+	if (hidden == "false") {showHidden=""} else if (hidden != "") {showHidden="true"} else {showHidden=HIDDEN_DEFAULT}
 	if (lines != "") {numberOfLines=lines} else {numberOfLines=LINES_DEFAULT}
 	if (width != "") {lineWidth=width}
 	else if (max_width != "") {lineWidth=max_width}
@@ -127,7 +129,7 @@ function printHistogram(valueTotals) {
 		frame=frame sprintf("%10s %8s %6s %s\n", "Value", "Quant", "%ile", "Histogram")
 		frame=frame sprintf("%10s %8s %6s %s\n", "-----", "-----", "----", "---------")
 	}
-	if (recordsBeforeHistogram > 0) {
+	if (recordsBeforeHistogram > 0 && showHidden) {
 		frame=frame sprintf("<%9.2f %8s %6.2f (hidden)\n", minValue, recordsBeforeHistogram, percentile(recordsBeforeHistogram, totalRecordsInHistogram))
 	}
 	else frame=frame "\n"
@@ -136,7 +138,7 @@ function printHistogram(valueTotals) {
 		frame=frame sprintf("%10.2f %8d %6.2f %s\n", label[lineNumber], quantity[lineNumber], percentile(total[lineNumber], totalRecordsInHistogram), bar(quantity[lineNumber]*recordsPerCharacter))
 		lineNumber ++
 	}
-	if (recordsAfterHistogram > 0) frame=frame sprintf(">=%8.2f %8s %6.2f (hidden)\n", maxValue, recordsAfterHistogram, "100")
+	if (recordsAfterHistogram > 0 && showHidden) frame=frame sprintf(">=%8.2f %8s %6.2f (hidden)\n", maxValue, recordsAfterHistogram, "100")
         else frame=frame "\n"
 	print frame
 }
