@@ -47,9 +47,9 @@ Briefly, use it like this:
 
 Show distribution of earthquake magnitudes over the last 7 days:
 ```
-mark$ curl http://earthquake.usgs.gov/earthquakes/catalogs/eqs7day-M0.txt --silent \
+mark$ curl http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.csv --silent \
 | \sed '1d' \
-| cut -d, -f9 \
+| cut -d, -f5 \
 | ./distribution width=70 lines=30
 
 Found 1154 records distributed in 58 distinct values between 0 and 6.1
