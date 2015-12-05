@@ -10,6 +10,8 @@
 #       distribution lines=5 max=10 min=3
 # 
 # Should support negative numbers and floats.
+# Can specify a bin width of N with option bin=N.  Overrides the lines option.
+# Can request a header summarizing the histogram with stats=true.
 # Line labels in the result refer to the start of that bar.
 # For example, a line labelled 4.00 followed by 5.00 will show values where 4.00 <= value < 5.00.
 # If you want to output histograms in real time, specify interval=10 for a histogram every 10 records.
@@ -24,9 +26,13 @@ BEGIN{
 	LINES_DEFAULT=50
 	WIDTH_DEFAULT=100
 	REALTIME_RECORDS_DEFAULT=1000
+	DONT_ACCUMULATE_DEFAULT=""
+	VERBOSE_DEFAULT=""
+	HIDDEN_DEFAULT=""
 }
 "$1" ~ /^[-0-9\.]+$/
 {
+	if (accumulate == "false" ) { dontAccumulateHistogram="true" } else if ( accumulate != "" ) {dontAccumulateHistogram=""} else {dontAccumulateHistogram=DONT_ACCUMULATE_DEFAULT}
 	finalValueTotals[$1 + 0] += 1
 	records ++
 	if (interval > 0) {
@@ -37,7 +43,7 @@ BEGIN{
                 }
 		if (iterations > 0) {
 			# once we've been around once we need to start decrementing and sometimes dropping values from our aggregate array
-			realtimeValueTotals[entries[realtimeIndex + 0] + 0]-=1
+			if ( dontAccumulateHistogram ) realtimeValueTotals[entries[realtimeIndex + 0] + 0]-=1
 			if (realtimeValueTotals[entries[realtimeIndex + 0] + 0] == 0) delete realtimeValueTotals[entries[realtimeIndex + 0] + 0]
 		}
 		entries[realtimeIndex + 0]=$1
@@ -56,6 +62,8 @@ function realtimeRingBufferSize() {
 	return buffer == "" ? REALTIME_RECORDS_DEFAULT : buffer
 }
 function printHistogram(valueTotals) {
+	if (stats != "") {verbose="true"} else {verbose=VERBOSE_DEFAULT}
+	if (hidden == "false") {showHidden=""} else if (hidden != "") {showHidden="true"} else {showHidden=HIDDEN_DEFAULT}
 	if (lines != "") {numberOfLines=lines} else {numberOfLines=LINES_DEFAULT}
 	if (width != "") {lineWidth=width}
 	else if (max_width != "") {lineWidth=max_width}
@@ -75,6 +83,8 @@ function printHistogram(valueTotals) {
 	
 	if (max != "") maxValue=max
 	else maxValue=lastValue
+
+	if (bin !="") {numberOfLines= ((maxValue-minValue) / bin + 1)}
 	
 	window=maxValue - minValue
 	if (numberOfLines -1 > window && lines == "") {
@@ -116,10 +126,12 @@ function printHistogram(valueTotals) {
 		currentValueIndex ++
 	}
 	totalRecordsInHistogram=total[lineNumber-1] + recordsAfterHistogram
-	frame=sprintf("\nFound %s records distributed in %s distinct values between %s and %s\n\n", totalRecordsInHistogram, distinctValues, firstValue, lastValue)
-	frame=frame sprintf("%10s %8s %6s %s\n", "Value", "Quant", "%ile", "Histogram")
-	frame=frame sprintf("%10s %8s %6s %s\n", "-----", "-----", "----", "---------")
-	if (recordsBeforeHistogram > 0) {
+	if (verbose) {
+		frame=sprintf("\nFound %s records distributed in %s distinct values between %s and %s\n\n", totalRecordsInHistogram, distinctValues, firstValue, lastValue)
+		frame=frame sprintf("%10s %8s %6s %s\n", "Value", "Quant", "%ile", "Histogram")
+		frame=frame sprintf("%10s %8s %6s %s\n", "-----", "-----", "----", "---------")
+	}
+	if (recordsBeforeHistogram > 0 && showHidden) {
 		frame=frame sprintf("<%9.2f %8s %6.2f (hidden)\n", minValue, recordsBeforeHistogram, percentile(recordsBeforeHistogram, totalRecordsInHistogram))
 	}
 	else frame=frame "\n"
@@ -128,7 +140,7 @@ function printHistogram(valueTotals) {
 		frame=frame sprintf("%10.2f %8d %6.2f %s\n", label[lineNumber], quantity[lineNumber], percentile(total[lineNumber], totalRecordsInHistogram), bar(quantity[lineNumber]*recordsPerCharacter))
 		lineNumber ++
 	}
-	if (recordsAfterHistogram > 0) frame=frame sprintf(">=%8.2f %8s %6.2f (hidden)\n", maxValue, recordsAfterHistogram, "100")
+	if (recordsAfterHistogram > 0 && showHidden) frame=frame sprintf(">=%8.2f %8s %6.2f (hidden)\n", maxValue, recordsAfterHistogram, "100")
         else frame=frame "\n"
 	print frame
 }
