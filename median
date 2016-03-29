@@ -1,0 +1,12 @@
+#!/usr/local/bin/gawk -f
+{
+    values[NR] = $1
+}
+END {
+    asort(values)
+    if (NR % 2) {
+        print values[(NR + 1) / 2]
+    } else {
+        print (values[(NR / 2)] + values[(NR / 2) + 1]) / 2.0
+    }
+}
