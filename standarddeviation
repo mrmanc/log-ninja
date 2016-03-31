@@ -4,5 +4,5 @@
   sumsq += $1 * $1
 }
 END {
-  print sqrt(sumsq / NR – (sum / NR)^2)
+  print sqrt(sumsq / NR - (sum / NR)^2)
 }

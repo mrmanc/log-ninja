@@ -1,10 +1,8 @@
-log-ninja
-=========
+## log-ninja
 
 A set of scripts I find useful when analysing log files. You might like to put them in your ~/bin folder.
 
-batch
-------------
+## batch
 
 batch will read a steam of input from STDIN and concatenate it (space separated) into a string, flushing it to STDOUT once per second. That means it can batch numerical output from a command in to a line per second with multiple values on it.
 
@@ -36,8 +34,7 @@ $ for (( i = 0; i <= 10 ; i++ )); do echo $i; sleep 0.2; done | ./batch
 
 [Watch an example](http://showterm.io/77d78dc1fe91a5d854ba8).
 
-distribution
-------------
+## distribution
 
 If you have the Perl library Time/HiRes.pm installed then you should look at using [philovivero's Perl implementation](https://github.com/philovivero/distribution), which is prettier and supports string values too (found looking at an old [Stack Overflow post](http://stackoverflow.com/questions/6949332/in-terminal-ascii-histograms-tool/11234476#11234476) of mine).
 
@@ -199,8 +196,7 @@ There was a known bug with percentiles when a min or a max value was specified, 
 
 You might also be interested in <a href="https://github.com/holman/spark">Spark</a> - Holman's script which generates sparklines (more traditional bar charts minus the labels etc) on your command line from on a list of numbers.
 
-field
------
+## field
 
 Takes lines on STDIN and returns the specified field (delimited by whitespace).
 
@@ -209,8 +205,7 @@ mark$ echo "The quick brown fox jumps over the lazy dog" | ./field 4
 fox
 ```
 
-fields
-------
+## fields
 
 Helps you work out what field you want to show. 
 
@@ -230,18 +225,7 @@ Showing final line again for readability
 9 : dog
 ```
 
-total
------
-
-Adds up a column of numbers from STDIN and outputs the total at the end.
-
-```
-mark$ : echo -e "1\n4\n7\n24\n64" | ./total
-100
-```
-
-float
------
+## float
 
 Converts a field into a float by extracting the first float it can find in the string, ignoring and removing anything else.
 
@@ -252,8 +236,7 @@ mark$ echo -e "167.2ms\n115.89ms\n143.85ms" | ./float
 143.85
 ```
 
-int
----
+## int
 
 Converts a field into an integer by extracting the first integer it can find in the string, ignoring and removing anything else.
 
@@ -264,8 +247,34 @@ mark$ echo -e "167.2ms\n115.89ms\n143.85ms" | ./int
 143
 ```
 
-uniqcount
----------
+## percentiles
+
+This command takes a stream of numbers and provides a summary of their distribution: the min/max, median and the 25th, 75th, 95th, 99th percentiles.
+
+```
+$ echo -e "1\n2\n3\n4\n" | percentiles 
+  Min: 1, 25th , Median: 1, 75th: 2, 95th: 3, 99th: 3, Max: 4
+```
+
+## standarddeviation
+
+Calculates the population standard deviation for a stream of numbers.
+
+```
+mark$ echo -e "1\n2\n3\n4\n" | standarddeviation 
+1.41421
+```
+
+## total
+
+Adds up a column of numbers from STDIN and outputs the total at the end.
+
+```
+mark$ : echo -e "1\n4\n7\n24\n64" | ./total
+100
+```
+
+## uniqcount
 
 Roughly equivalent to piping some lines of text through sort and uniq -c, except less characters.
 
@@ -277,8 +286,7 @@ mark$ echo -e "apple\norange\norange\nbanana\napple\napple\nquince\nbanana" | ./
 1 quince
 ```
 
-urlencode / urldecode
----------------------
+## urlencode / urldecode
 
 Wrapper scripts for perls urlencoding functionality. 
 
@@ -287,4 +295,13 @@ mark$ echo "first=this+is+a+field&second=was+it+clear+(already)?" | ./urlencode
 first%3Dthis%2Bis%2Ba%2Bfield%26second%3Dwas%2Bit%2Bclear%2B(already)%3F
 mark$ echo "first=this+is+a+field&second=was+it+clear+%28already%29%3F" | ./urldecode
 first=this+is+a+field&second=was+it+clear+(already)?
+```
+
+## Variance
+
+Calculates the population variance for a stream of numbers.
+
+```
+mark$ echo -e "1\n2\n3\n4\n" | variance 
+  2
 ```
