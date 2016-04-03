@@ -1,0 +1,8 @@
+#!/usr/bin/awk -f
+{
+  sum += $1
+  sumsq += $1 * $1
+}
+END {
+  print sqrt(sumsq / NR - (sum / NR)^2)
+}

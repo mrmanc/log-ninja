@@ -1,0 +1,8 @@
+#!/usr/local/bin/gawk -f
+{
+  values[NR]=$1
+}
+END {
+  asort(values)
+  print "Min: " values[1] ", 25th " values[int(NR*0.25-0.5)] """, Median: " values[int(NR*0.5-0.5)] ", 75th: " values[int(NR*0.75-0.5)] ", 95th: " values[int(NR*0.95-0.5)] ", 99th: " values[int(NR*0.99-0.5)] ", Max: " values[NR]
+}
