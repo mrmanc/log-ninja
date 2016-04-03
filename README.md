@@ -247,6 +247,17 @@ mark$ echo -e "167.2ms\n115.89ms\n143.85ms" | ./int
 143
 ```
 
+## median
+
+Calculates the [median](https://en.wikipedia.org/wiki/Median) value (i.e. 50th percentile) in a stream of numbers, because the mean really sucks. Looking at the median avoids any outlying values skewing the outcome, and allows you to make a statement about half the values such as half of the web requests took less time than 95ms. For example:
+ 
+ ```
+ $ echo -e "1\n2\n3\n4\n" | median
+   3
+ $ echo -e "1\n2\n3\n4\n5\n100" | median
+   3.5
+ ```
+
 ## percentiles
 
 This command takes a stream of numbers and provides a summary of their distribution: the min/max, median and the 25th, 75th, 95th, 99th percentiles.
@@ -297,7 +308,7 @@ mark$ echo "first=this+is+a+field&second=was+it+clear+%28already%29%3F" | ./urld
 first=this+is+a+field&second=was+it+clear+(already)?
 ```
 
-## Variance
+## variance
 
 Calculates the population variance for a stream of numbers.
 
