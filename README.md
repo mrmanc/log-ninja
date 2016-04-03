@@ -2,7 +2,7 @@
 
 A set of scripts I find useful when analysing log files. You might like to put them in your ~/bin folder.
 
-Jump to: [batch](#batch), [distribution](#distribution), [field](#field), [fields](#fields), [float](#float), [int](#int), [logs](#logs), [median](#median), [percentiles](#percentiles), [standarddeviation](#standarddeviation), [total](#total), [uniqcount](#uniqcount), [urldecode](#urldecode), [urlencode](#urlencode), [variance](#variance).
+Jump to: [batch](#batch), [distribution](#distribution), [field](#field), [fields](#fields), [float](#float), [int](#int), [logs](#logs), [median](#median), [percentiles](#percentiles), [standarddeviation](#standarddeviation), [total](#total), [uniqcount](#uniqcount), [urlencode / urldecode](#urlencode--urldecode), [variance](#variance).
 
 
 ## batch
