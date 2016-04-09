@@ -1,4 +1,4 @@
-#!/usr/bin/awk -f
+#!/usr/bin/env awk -f
 {
   sum += $1
   sumsq += $1 * $1

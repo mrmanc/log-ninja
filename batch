@@ -1,4 +1,4 @@
-#!/usr/bin/awk -f
+#!/usr/bin/env awk -f
 
 BEGIN {
     "date +%s" | getline batch_time;

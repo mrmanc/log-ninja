@@ -1,4 +1,4 @@
-#!/usr/bin/awk -f
+#!/usr/bin/env awk -f
 
 # Comes from https://github.com/mrmanc/log-ninja/blob/master/distribution
 # 
@@ -26,8 +26,8 @@ BEGIN{
 	LINES_DEFAULT=50
 	WIDTH_DEFAULT=100
 	REALTIME_RECORDS_DEFAULT=1000
-	DONT_ACCUMULATE_DEFAULT=""
-	VERBOSE_DEFAULT=""
+	DONT_ACCUMULATE_DEFAULT="true"
+	VERBOSE_DEFAULT="true"
 	HIDDEN_DEFAULT=""
 }
 "$1" ~ /^[-0-9\.]+$/
