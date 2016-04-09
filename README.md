@@ -11,7 +11,7 @@ batch will read a steam of input from STDIN and concatenate it (space separated)
 
 So this:
 
-```
+```sh
 $ for (( i = 0; i <= 10 ; i++ )); do echo $i; sleep 0.2; done
 0
 1
@@ -28,7 +28,7 @@ $ for (( i = 0; i <= 10 ; i++ )); do echo $i; sleep 0.2; done
 
 becomes this:
 
-```
+```sh
 $ for (( i = 0; i <= 10 ; i++ )); do echo $i; sleep 0.2; done | ./batch
 0 1 2
 4 5 6 7
@@ -47,7 +47,7 @@ Briefly, use it like this:
 
 Show distribution of earthquake magnitudes over the last 7 days:
 ```
-mark$ curl http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.csv --silent \
+$ curl http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.csv --silent \
 | \sed '1d' \
 | cut -d, -f5 \
 | ./distribution width=70 lines=30
@@ -87,12 +87,12 @@ Found 1154 records distributed in 58 distinct values between 0 and 6.1
       5.89        2  99.83 __
       6.10        2 100.00 __
 
-```
+```sh
 
 Or how tall people are (in inches):
 
-```
-mark$ curl --silent http://socr.ucla.edu/docs/resources/SOCR_Data/SOCR_Data_Dinov_020108_HeightsWeights.html | \
+```sh
+$ curl --silent http://socr.ucla.edu/docs/resources/SOCR_Data/SOCR_Data_Dinov_020108_HeightsWeights.html | \
 grep -A 2 "<tr" | grep "<td x:num" | sed -e "s/^.*>\([0-9.]*\)<.*$/\1/" | ./distribution lines=30 width=70
 
 Found 25000 records distributed in 20917 distinct values between 60.2784 and 75.1528
@@ -133,8 +133,8 @@ Found 25000 records distributed in 20917 distinct values between 60.2784 and 75.
 
 Or show the distribution of word length in your UNIX dictionary: (you can use <a href="http://www.cs.duke.edu/~ola/ap/linuxwords">this shorter words list</a> if you don't have words)
 
-```
-mark$ cat /usr/share/dict/words | awk '{print length($1)}' | ./distribution width=70
+```sh
+$ cat /usr/share/dict/words | awk '{print length($1)}' | ./distribution width=70
 
 Found 489040 records distributed in 35 distinct values between 1 and 45
 
@@ -191,8 +191,8 @@ It's <a href="http://en.wikipedia.org/wiki/Pneumonoultramicroscopicsilicovolcano
 
 You could cut out the outlier by selecting a window of values (i.e. min and max) like this:
 
-```
-mark$ cat /usr/share/dict/words | awk '{print length($1)}' | ./distribution width=80 min=1 max=35
+```sh
+$ cat /usr/share/dict/words | awk '{print length($1)}' | ./distribution width=80 min=1 max=35
 ```
 
 There was a known bug with percentiles when a min or a max value was specified, but a rewrite has solved this.
@@ -203,8 +203,8 @@ You might also be interested in <a href="https://github.com/holman/spark">Spark<
 
 Takes lines on STDIN and returns the specified field (delimited by whitespace).
 
-```
-mark$ echo "The quick brown fox jumps over the lazy dog" | ./field 4
+```sh
+$ echo "The quick brown fox jumps over the lazy dog" | ./field 4
 fox
 ```
 
@@ -212,8 +212,8 @@ fox
 
 Helps you work out what field you want to show. 
 
-```
-mark$ echo "The quick brown fox jumps over the lazy dog" | ./fields
+```sh
+$ echo "The quick brown fox jumps over the lazy dog" | ./fields
 1 : The | 2 : quick | 3 : brown | 4 : fox | 5 : jumps | 6 : over | 7 : the | 8 : lazy | 9 : dog |
 
 Showing final line again for readability
@@ -232,8 +232,8 @@ Showing final line again for readability
 
 Converts a field into a float by extracting the first float it can find in the string, ignoring and removing anything else.
 
-```
-mark$ echo -e "167.2ms\n115.89ms\n143.85ms" | ./float
+```sh
+$ echo -e "167.2ms\n115.89ms\n143.85ms" | ./float
 167.2
 115.89
 143.85
@@ -243,8 +243,8 @@ mark$ echo -e "167.2ms\n115.89ms\n143.85ms" | ./float
 
 Converts a field into an integer by extracting the first integer it can find in the string, ignoring and removing anything else.
 
-```
-mark$ echo -e "167.2ms\n115.89ms\n143.85ms" | ./int
+```sh
+$ echo -e "167.2ms\n115.89ms\n143.85ms" | ./int
 167
 115
 143
@@ -265,7 +265,7 @@ Calculates the [median](https://en.wikipedia.org/wiki/Median) value (i.e. 50th p
 
 This command takes a stream of numbers and provides a summary of their distribution: the min/max, median and the 25th, 75th, 95th, 99th percentiles.
 
-```
+```sh
 $ echo -e "1\n2\n3\n4\n" | percentiles 
   Min: 1, 25th , Median: 1, 75th: 2, 95th: 3, 99th: 3, Max: 4
 ```
@@ -274,8 +274,8 @@ $ echo -e "1\n2\n3\n4\n" | percentiles
 
 Calculates the population standard deviation for a stream of numbers.
 
-```
-mark$ echo -e "1\n2\n3\n4\n" | standarddeviation 
+```sh
+$ echo -e "1\n2\n3\n4\n" | standarddeviation 
 1.41421
 ```
 
@@ -283,8 +283,8 @@ mark$ echo -e "1\n2\n3\n4\n" | standarddeviation
 
 Adds up a column of numbers from STDIN and outputs the total at the end.
 
-```
-mark$ : echo -e "1\n4\n7\n24\n64" | ./total
+```sh
+$ : echo -e "1\n4\n7\n24\n64" | ./total
 100
 ```
 
@@ -292,8 +292,8 @@ mark$ : echo -e "1\n4\n7\n24\n64" | ./total
 
 Roughly equivalent to piping some lines of text through sort and uniq -c, except less characters.
 
-```
-mark$ echo -e "apple\norange\norange\nbanana\napple\napple\nquince\nbanana" | ./uniqcount
+```sh
+$ echo -e "apple\norange\norange\nbanana\napple\napple\nquince\nbanana" | ./uniqcount
 2 orange
 3 apple
 2 banana
@@ -304,10 +304,10 @@ mark$ echo -e "apple\norange\norange\nbanana\napple\napple\nquince\nbanana" | ./
 
 Wrapper scripts for perls urlencoding functionality. 
 
-```
-mark$ echo "first=this+is+a+field&second=was+it+clear+(already)?" | ./urlencode
+```sh
+$ echo "first=this+is+a+field&second=was+it+clear+(already)?" | ./urlencode
 first%3Dthis%2Bis%2Ba%2Bfield%26second%3Dwas%2Bit%2Bclear%2B(already)%3F
-mark$ echo "first=this+is+a+field&second=was+it+clear+%28already%29%3F" | ./urldecode
+$ echo "first=this+is+a+field&second=was+it+clear+%28already%29%3F" | ./urldecode
 first=this+is+a+field&second=was+it+clear+(already)?
 ```
 
@@ -315,7 +315,7 @@ first=this+is+a+field&second=was+it+clear+(already)?
 
 Calculates the population variance for a stream of numbers.
 
-```
-mark$ echo -e "1\n2\n3\n4\n" | variance 
+```sh
+$ echo -e "1\n2\n3\n4\n" | variance 
   2
 ```
