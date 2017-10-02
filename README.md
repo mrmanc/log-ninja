@@ -319,3 +319,4 @@ Calculates the population variance for a stream of numbers.
 $ echo -e "1\n2\n3\n4\n" | variance 
   2
 ```
+
